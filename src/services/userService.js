@@ -1,9 +1,10 @@
+const bcrypt = require('bcrypt')
 const { db } = require('../database/connection')
 
 module.exports = {
   async getAllUsers() {
     try {
-      const users = await db.many('SELECT * FROM users');
+      const users = await db.many('SELECT id, name, email FROM users');
 
       return users
     } catch (error) {
@@ -13,11 +14,13 @@ module.exports = {
 
   async create(name, email, password) {
     try {
+      const encryptedPassword = await bcrypt.hash(password, 8);
+
       await db.none(`
       INSERT INTO users (name, email, password) VALUES ($1, $2, $3)`,
-      [name, email, password])
+      [name, email, encryptedPassword])
 
-      return { name, email, password }
+      return { name, email }
     } catch (error) {
       console.log(error)
     }
