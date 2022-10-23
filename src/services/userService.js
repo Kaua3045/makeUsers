@@ -14,13 +14,19 @@ module.exports = {
 
   async create(name, email, password) {
     try {
-      const encryptedPassword = await bcrypt.hash(password, 8);
+      const userExists = await db.oneOrNone('SELECT email FROM users WHERE email = $1', email)
 
-      await db.none(`
-      INSERT INTO users (name, email, password) VALUES ($1, $2, $3)`,
-      [name, email, encryptedPassword])
+      if (userExists === null) {
+        const encryptedPassword = await bcrypt.hash(password, 8);
+        
+        await db.none(`
+        INSERT INTO users (name, email, password) VALUES ($1, $2, $3)`,
+        [name, email, encryptedPassword])
 
-      return { name, email }
+        return { name, email }
+      } else {
+        return 'User already exists'
+      }
     } catch (error) {
       console.log(error)
     }
