@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt')
-const { db } = require('../database/connection')
+const { db } = require('../database/connection');
 
 module.exports = {
   async getAllUsers() {
@@ -12,18 +12,19 @@ module.exports = {
     }
   },
 
-  async create(name, email, password) {
+  async create(user) {
     try {
-      const userExists = await db.oneOrNone('SELECT email FROM users WHERE email = $1', email)
+      const userExists = await db.oneOrNone('SELECT email FROM users WHERE email = $1', user.email)
 
       if (userExists === null) {
-        const encryptedPassword = await bcrypt.hash(password, 8);
+        const encryptedPassword = await bcrypt.hash(user.password, 8);
         
         await db.none(`
         INSERT INTO users (name, email, password) VALUES ($1, $2, $3)`,
-        [name, email, encryptedPassword])
+        [user.name, user.email, encryptedPassword])
 
-        return { name, email }
+
+        return user
       } else {
         return 'User already exists'
       }
@@ -35,8 +36,6 @@ module.exports = {
   async deleteUser(id) {
     try {
       await db.query('DELETE FROM users WHERE id = $1', id)
-
-      return true
     } catch (error) {
       console.log(error)
     }

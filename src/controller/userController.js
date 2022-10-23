@@ -1,3 +1,4 @@
+const User = require('../models/user')
 const { getAllUsers, create, deleteUser } = require('../services/userService')
 
 module.exports = {
@@ -8,7 +9,10 @@ module.exports = {
 
   async createUserController(req, res) {
     const { name, email, password } = req.body
-    const result = await create(name, email, password)
+
+    const user = new User(name, email, password)
+
+    const result = await create(user)
 
     return res.status(200).json(result)
   },
