@@ -14,13 +14,21 @@ module.exports = {
 
     const result = await create(user)
 
+    if (result instanceof Error) {
+      return res.status(400).json(result.message)
+    }
+
     return res.status(200).json(result)
   },
 
   async deleteUserController(req, res) {
     const { id } = req.params
-    await deleteUser(id)
+    const result = await deleteUser(id)
 
-    return res.status(200).json({ message: `id deletado ${id}`})
+    if (result instanceof Error) {
+      return res.status(400).json(result.message)
+    }
+
+    return res.status(204).end()
   }
 }

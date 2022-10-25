@@ -1,43 +1,54 @@
 const bcrypt = require('bcrypt')
-const { db } = require('../database/connection');
+const { client } = require('../database/connection');
+const User = require('../models/user');
 
 module.exports = {
   async getAllUsers() {
     try {
-      const users = await db.many('SELECT id, name, email FROM users');
+      const { rows } = await client.query('SELECT id, name, email FROM users');
+      const users = rows
 
       return users
     } catch (error) {
-      console.log(error)
+      return new Error(error)
     }
   },
 
   async create(user) {
     try {
-      const userExists = await db.oneOrNone('SELECT email FROM users WHERE email = $1', user.email)
+      const { rows } = await client.query('SELECT email FROM users WHERE email = $1', [ user.email ])
+      const userExists = rows[0];
 
-      if (userExists === null) {
+      if (!userExists) {
         const encryptedPassword = await bcrypt.hash(user.password, 8);
+
+        const userCreated = new User(user.name, user.email, encryptedPassword)
         
-        await db.none(`
-        INSERT INTO users (name, email, password) VALUES ($1, $2, $3)`,
-        [user.name, user.email, encryptedPassword])
+        await client.query(`
+        INSERT INTO user (id, name, email, password) VALUES ($1, $2, $3, $4)`,
+        [userCreated.id, userCreated.name, userCreated.email, encryptedPassword])
 
-
-        return user
+        return userCreated
       } else {
-        return 'User already exists'
+        return new Error('User alredy exists!')
       }
     } catch (error) {
-      console.log(error)
+      return new Error(error)
     }
   },
 
   async deleteUser(id) {
     try {
-      await db.query('DELETE FROM users WHERE id = $1', id)
+      const { rows } = await client.query('SELECT id FROM users WHERE id = $1', [ id ])
+      const usersExists = rows[0];
+
+      if (!usersExists) {
+        return new Error('User does not exists!')
+      }
+
+      await client.query('DELETE FROM users WHERE id = $1', [id])
     } catch (error) {
-      console.log(error)
+      return new Error(error)
     }
   }
 }
