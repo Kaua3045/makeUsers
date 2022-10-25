@@ -1,8 +1,17 @@
-const pgp = require('pg-promise')()
+const { Pool } = require('pg')
 
-const connection = 'postgres://kaua:kaua@localhost:5432/kaua'
-const db = pgp(connection)
+const createConnection = async () => {
+  const client = new Pool({
+    host: process.env.HOST_PG,
+    port: process.env.PORT_PG,
+    user: process.env.USER_PG,
+    password: process.env.PASSWORD_PG,
+    database: process.env.DATABASE_PG
+  })
 
-module.exports = {
-  pgp, db
+  await client.connect()
+
+  return { client }
 }
+
+module.exports = { createConnection }
