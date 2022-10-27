@@ -25,7 +25,7 @@ module.exports = {
         const userCreated = new User(user.name, user.email, encryptedPassword)
         
         await client.query(`
-        INSERT INTO user (id, name, email, password) VALUES ($1, $2, $3, $4)`,
+        INSERT INTO users (id, name, email, password) VALUES ($1, $2, $3, $4)`,
         [userCreated.id, userCreated.name, userCreated.email, encryptedPassword])
 
         return userCreated
@@ -47,6 +47,40 @@ module.exports = {
       }
 
       await client.query('DELETE FROM users WHERE id = $1', [id])
+    } catch (error) {
+      return new Error(error)
+    }
+  },
+
+  async updateUser(id, { ...rest }) {
+    try {
+      const { rows } = await client.query('SELECT * FROM users where id = $1', [ id ])
+      const userExists = rows[0];
+
+      if (!userExists) {
+        return new Error('User does not exists!')
+      }
+      
+      const updatedUser = Object.assign(userExists, rest)
+      await client.query('UPDATE users SET name = $1, email = $2', [updatedUser.name, updatedUser.email])
+
+      return updatedUser
+    } catch (error) {
+      return new Error(error)
+    }
+  },
+
+  async resetPasswordUser(id, newPassword) {
+    try {
+      const { rows } = await client.query('SELECT password FROM users where id = $1', [ id ])
+      const userExists = rows[0];
+
+      if (!userExists) {
+        return new Error('User does not exists!')
+      }
+
+      const updatedPassword = await bcrypt.hash(newPassword, 8)
+      await client.query('UPDATE users SET password = $1', [updatedPassword])
     } catch (error) {
       return new Error(error)
     }
