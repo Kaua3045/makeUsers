@@ -6,12 +6,12 @@ module.exports = {
   async auth(email, password) {
     try {
       const { rows } = await client.query('SELECT * FROM users where email = $1', [email])
-      const userExists = rows[0]
-      const id = userExists.id
+      const user = rows[0]
+      const id = user.id
 
-      const passwordIsValid = await bcrypt.compare(password, userExists.password)
+      const passwordIsValid = await bcrypt.compare(password, user.password)
 
-      if (!passwordIsValid || !userExists) {
+      if (!passwordIsValid || !user) {
         return new Error('User does not exists!')
       }
 
@@ -19,7 +19,7 @@ module.exports = {
         expiresIn: '60m' // 60 minutos
       })
 
-      return { userExists, token }
+      return { user, token }
     } catch (error) {
       return new Error(error)
     }
