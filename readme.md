@@ -14,6 +14,8 @@
 ```https
 URL: http://localhost:3000/api/users
 
+headers: send valid Barear Token
+
 result:
 
 [
@@ -68,6 +70,8 @@ result:
 ```https
 URL: http://localhost:3000/api/users/update/:id
 
+headers: send valid Barear Token
+
 body: 
   {
     "name": "fulano2",
@@ -95,6 +99,8 @@ result: 204 (no content)
 
 ```https
 URL: http://localhost:3000/api/users/delete/:id
+
+headers: send valid Barear Token
 
 result: 204 (no content)
 ```
