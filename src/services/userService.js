@@ -14,6 +14,21 @@ module.exports = {
     }
   },
 
+  async getUserById(id) {
+    try {
+      const { rows } = await client.query('SELECT id, name, email FROM users WHERE id = $1', [ id ])
+      const user = rows[0]
+
+      if (!user) {
+        return new Error('User does not exist!')
+      }
+
+      return user
+    } catch (error) {
+      return new Error(error)
+    }
+  },
+
   async create(user) {
     try {
       const { rows } = await client.query('SELECT email FROM users WHERE email = $1', [ user.email ])
