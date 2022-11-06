@@ -19,7 +19,7 @@ module.exports = {
         expiresIn: '60m' // 60 minutos
       })
 
-      return token
+      return { userExists, token }
     } catch (error) {
       return new Error(error)
     }
