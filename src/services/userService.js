@@ -77,7 +77,7 @@ module.exports = {
       }
       
       const updatedUser = Object.assign(userExists, rest)
-      await client.query('UPDATE users SET name = $1, email = $2', [updatedUser.name, updatedUser.email])
+      await client.query('UPDATE users SET name = $1, email = $2 WHERE id = $3', [updatedUser.name, updatedUser.email, id])
 
       return updatedUser
     } catch (error) {
