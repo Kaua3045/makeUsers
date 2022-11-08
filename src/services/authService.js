@@ -15,7 +15,9 @@ module.exports = {
         return new Error('User does not exists!')
       }
 
-      const token = jwt.sign({ id }, process.env.SECRET, {
+      delete user.password
+
+      const token = jwt.sign({ id, user }, process.env.SECRET, {
         expiresIn: '60m' // 60 minutos
       })
 
