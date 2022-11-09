@@ -18,7 +18,7 @@ const { isAdmin } = require('./middlewares/adminMiddleware')
 routes.get('/', auth, getAllUsersController)
 routes.get('/:id', getUserByIdController)
 routes.post('/create', createUserController)
-routes.put('/update/:id', auth, updateUserController)
+routes.put('/update', auth, updateUserController)
 routes.put('/resetpassword/:id', resetPasswordUserController)
 routes.delete('/delete/:id', auth, deleteUserController)
 

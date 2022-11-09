@@ -11,9 +11,13 @@ module.exports = {
     }
 
     try {
-      jwt.verify(token, process.env.SECRET)
+      const userData = jwt.verify(token, process.env.SECRET)
+            
+      req.user ={
+        id: userData.id
+      }
 
-      next()
+      return next()
     } catch (error) {
       throw new AppError('Invalid token', null, 401)
     }

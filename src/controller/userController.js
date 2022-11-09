@@ -39,9 +39,8 @@ module.exports = {
   },
 
   async updateUserController(req, res) {
-    const { id } = req.params
     const user = req.body
-    await updateUser(id, user)
+    await updateUser(req.user.id, user)
 
     return res.status(204).end()
   },
