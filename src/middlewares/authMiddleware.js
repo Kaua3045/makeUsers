@@ -1,12 +1,13 @@
 const jwt = require('jsonwebtoken')
+const AppError = require('../errors/appError')
 
 module.exports = {
   auth(req, res, next) {
-    const authHeader = req.headers['authorization']
+    const authHeader = req.headers.authorization
     const token = authHeader && authHeader.split(" ")[1]
 
     if (!token) {
-      return res.status(401).json({ auth: false, message: 'No token provided' })
+      throw new AppError('Token is missing', null, 401)
     }
 
     try {
@@ -14,7 +15,7 @@ module.exports = {
 
       next()
     } catch (error) {
-      res.status(400).json({ mensagem: 'Token invalid'})
+      throw new AppError('Invalid token', null, 401)
     }
   }
 }

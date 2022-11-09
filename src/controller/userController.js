@@ -18,11 +18,7 @@ module.exports = {
     const { id } = req.params
     const result = await getUserById(id)
 
-    if (result instanceof Error) {
-      return res.status(400).json(result.message)
-    }
-
-    return res.status(200).json(result)
+    return res.json(result)
   },
 
   async createUserController(req, res) {
@@ -32,20 +28,12 @@ module.exports = {
 
     const result = await create(user)
 
-    if (result instanceof Error) {
-      return res.status(400).json(result.message)
-    }
-
-    return res.status(200).json(result)
+    return res.status(201).json(result)
   },
 
   async deleteUserController(req, res) {
     const { id } = req.params
-    const result = await deleteUser(id)
-
-    if (result instanceof Error) {
-      return res.status(400).json(result.message)
-    }
+    await deleteUser(id)
 
     return res.status(204).end()
   },
@@ -53,11 +41,7 @@ module.exports = {
   async updateUserController(req, res) {
     const { id } = req.params
     const user = req.body
-    const result = await updateUser(id, user)
-
-    if (result instanceof Error) {
-      return res.status(400).json(result.message)
-    }
+    await updateUser(id, user)
 
     return res.status(204).end()
   },
@@ -65,11 +49,7 @@ module.exports = {
   async resetPasswordUserController(req, res) {
     const { id } = req.params
     const { newPassword } = req.body
-    const result = await resetPasswordUser(id, newPassword)
-
-    if (result instanceof Error) {
-      return res.status(400).json(result.message)
-    }
+    await resetPasswordUser(id, newPassword)
 
     return res.status(204).end()
   }
