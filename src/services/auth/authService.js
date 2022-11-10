@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { client } = require("../database/connection")
-const AppError = require('../errors/appError')
+const { client } = require("../../database/connection")
+const AppError = require('../../errors/appError')
 
 module.exports = {
   async auth(email, password) {

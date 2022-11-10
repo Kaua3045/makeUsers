@@ -1,4 +1,4 @@
-const { auth } = require("../services/authService")
+const { auth } = require("../services/auth/authService")
 
 module.exports = {
   async loginController(req, res) {
