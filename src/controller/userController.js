@@ -15,8 +15,7 @@ module.exports = {
   },
 
   async getUserByIdController(req, res) {
-    const { id } = req.params
-    const result = await getUserById(id)
+    const result = await getUserById(req.user.id)
 
     return res.json(result)
   },
