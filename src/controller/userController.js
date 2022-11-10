@@ -1,13 +1,13 @@
 const User = require('../models/user')
 const { 
   getAllUsers, 
-  create, 
+  createUser, 
   deleteUser, 
   updateUser, 
   resetPasswordUser, 
   getUserById, 
   updateUserAvatar
-} = require('../services/userService')
+} = require('../services/users')
 
 module.exports = {
   async getAllUsersController(req, res) {
@@ -26,7 +26,7 @@ module.exports = {
 
     const user = new User(name, email, password)
 
-    const result = await create(user)
+    const result = await createUser(user)
 
     return res.status(201).json(result)
   },
