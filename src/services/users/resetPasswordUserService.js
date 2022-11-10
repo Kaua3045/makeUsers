@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt')
 const { client } = require('../../database/connection')
 const AppError = require('../../errors/appError')
 
