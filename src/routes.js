@@ -7,13 +7,16 @@ const {
   deleteUserController, 
   updateUserController, 
   resetPasswordUserController, 
-  getUserByIdController
+  getUserByIdController,
+  updateUserAvatarController
 } = require('./controller/userController')
 
 const { loginController } = require('./controller/authController')
 const { auth } = require('./middlewares/authMiddleware')
 const { adminController } = require('./controller/adminController')
 const { isAdmin } = require('./middlewares/adminMiddleware')
+const uploadAvatar = require('./middlewares/uploadMiddleware')
+const { saveFile } = require('./database/diskStorage')
 
 routes.get('/all', auth, getAllUsersController)
 routes.get('/', auth, getUserByIdController)
@@ -25,5 +28,7 @@ routes.delete('/delete/:id', auth, deleteUserController)
 routes.post('/auth', loginController)
 
 routes.put('/admin', isAdmin, adminController)
+
+routes.patch('/avatar', auth, uploadAvatar.single('avatar'), updateUserAvatarController)
 
 module.exports = routes

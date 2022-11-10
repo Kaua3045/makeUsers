@@ -5,7 +5,8 @@ const {
   deleteUser, 
   updateUser, 
   resetPasswordUser, 
-  getUserById 
+  getUserById, 
+  updateUserAvatar
 } = require('../services/userService')
 
 module.exports = {
@@ -42,6 +43,14 @@ module.exports = {
     await updateUser(req.user.id, user)
 
     return res.status(204).end()
+  },
+
+  async updateUserAvatarController(req, res) {
+    const id = req.user.id
+    const fileName = req.file.filename
+    const user = await updateUserAvatar(id, fileName)
+
+    return res.json(user)
   },
 
   async resetPasswordUserController(req, res) {
