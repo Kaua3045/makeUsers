@@ -23,5 +23,9 @@ module.exports = {
     }
 
     await fs.promises.unlink(filePath)
+  },
+
+  urlAvatar(avatarName) {
+    return `${process.env.APP_API_URL}/files/${avatarName}`
   }
 }

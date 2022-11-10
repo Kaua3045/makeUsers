@@ -2,7 +2,7 @@ const { client } = require('../../database/connection')
 const AppError = require('../../errors/appError')
 
 module.exports = {
-  async delete(id) {
+  async deleteUser(id) {
     const { rows } = await client.query('SELECT id FROM users WHERE id = $1', [ id ])
     const usersExists = rows[0];
 

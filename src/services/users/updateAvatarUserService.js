@@ -1,10 +1,10 @@
 const { client } = require('../../database/connection')
 const AppError = require('../../errors/appError')
-const { deleteFile, saveFile } = require('../../database/diskStorage')
+const { deleteFile, saveFile, urlAvatar } = require('../../database/diskStorage')
 
 module.exports = {
   async updateUserAvatar(id, avaterFilename) {
-    const { rows } = await client.query('SELECT id, avatar, avatar_url FROM users WHERE id = $1', [id])
+    const { rows } = await client.query('SELECT id, avatar FROM users WHERE id = $1', [id])
     const userExists = rows[0]
 
     if (!userExists) {
@@ -18,10 +18,12 @@ module.exports = {
     const avatarFile = await saveFile(avaterFilename)
 
     userExists.avatar = avatarFile
-    userExists.avatar_url = `${process.env.APP_API_URL}/files/${avatarFile}`
+    avatar_url = urlAvatar(avatarFile)
+    
+    await client.query('UPDATE users SET avatar = $1 WHERE id = $2', [userExists.avatar, id])
 
-    await client.query('UPDATE users SET avatar = $1, avatar_url = $2 WHERE id = $3', [userExists.avatar, userExists.avatar_url, id])
+    const user = {avatar_url, ...userExists}
 
-    return userExists
+    return { user }
   }
 }

@@ -1,15 +1,20 @@
 const { client } = require('../../database/connection')
+const { urlAvatar } = require('../../database/diskStorage')
 const AppError = require('../../errors/appError')
 
 module.exports = {
   async getUserById(id) {
-    const { rows } = await client.query('SELECT id, name, email, avatar_url FROM users WHERE id = $1', [ id ])
-    const user = rows[0]
+    const { rows } = await client.query('SELECT id, name, email, avatar FROM users WHERE id = $1', [ id ])
+    const userDatabase = rows[0]
 
-    if (!user) {
+    if (!userDatabase) {
       throw new AppError('User does not exist!')
     }
 
-    return user
+    avatar_url = urlAvatar(userDatabase.avatar)
+
+    const user = {avatar_url, ...userDatabase}
+
+    return { user }
   }
 }
