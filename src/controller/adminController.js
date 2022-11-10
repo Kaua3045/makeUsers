@@ -1,4 +1,4 @@
-const { updateAdmin } = require("../services/adminService")
+const { updateAdmin } = require("../services/admin/adminService")
 
 module.exports = {
   async adminController(req, res) {
