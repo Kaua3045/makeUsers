@@ -6,10 +6,12 @@ module.exports = {
     const { rows } = await client.query('SELECT id, name, email, admin, avatar FROM users WHERE admin = $1', [1])
     const admins = rows
 
-    const adminsUpdated = admins.map(admin => {
-      avatar_url = urlAvatar(admin.avatar)
-      delete admin.avatar
-      return {admin, avatar_url}
+    const adminsUpdated = admins.map(admins => {
+      avatar_url = urlAvatar(admins.avatar)
+      delete admins.avatar
+
+      const admin = {avatar_url, ...admins}
+      return { admin }
     })
 
     return adminsUpdated
