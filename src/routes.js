@@ -11,28 +11,37 @@ const {
   updateUserAvatarController
 } = require('./controller/userController')
 
+const { 
+  createProductController, 
+  createProductImagesController, 
+  getProductByIdController, 
+  deleteProductController
+} = require('./controller/productController')
+
 const { loginController } = require('./controller/authController')
 const { auth } = require('./middlewares/authMiddleware')
 const { updateAdminController, getAllAdminsController } = require('./controller/adminController')
 const { isAdmin } = require('./middlewares/adminMiddleware')
 const upload = require('./middlewares/uploadMiddleware')
-const { createProductController, createProductImagesController } = require('./controller/productController')
 
-routes.get('/all', auth, getAllUsersController)
-routes.get('/', auth, getUserByIdController)
-routes.post('/create', createUserController)
-routes.put('/update', auth, updateUserController)
-routes.put('/resetpassword/:id', resetPasswordUserController)
-routes.delete('/delete/:id', auth, deleteUserController)
+routes.get('/users/all', auth, getAllUsersController)
+routes.get('/users/', auth, getUserByIdController)
+routes.post('/users/create', createUserController)
+routes.put('/users/update', auth, updateUserController)
+routes.put('/users/resetpassword/:id', resetPasswordUserController)
+routes.delete('/users/delete/:id', auth, deleteUserController)
+
+routes.patch('/users/avatar', auth, upload.single('avatar'), updateUserAvatarController)
 
 routes.post('/auth', loginController)
 
 routes.put('/admin', isAdmin, updateAdminController)
 routes.get('/admin/list', isAdmin, getAllAdminsController)
 
-routes.patch('/avatar', auth, upload.single('avatar'), updateUserAvatarController)
 
+routes.get('/product/:id', getProductByIdController)
 routes.post('/product/create', createProductController)
 routes.patch('/product/create/images/:id', upload.array('images'), createProductImagesController)
+routes.delete('/product/delete/:id', deleteProductController)
 
 module.exports = routes
