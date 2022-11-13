@@ -3,6 +3,7 @@ const { v4: uuid } = require('uuid')
 class ProductImage {
   id
   name
+  url
   product_id
 
   constructor(name, product_id) {
