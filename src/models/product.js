@@ -6,6 +6,7 @@ class Product {
   description
   price
   amount
+  productsImages = []
 
   constructor(name, description, price, amount) {
     if (!this.id) {
