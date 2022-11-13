@@ -8,6 +8,8 @@ module.exports = {
     const productDatabase = await client.query('SELECT * FROM products WHERE id = $1', [id])    
     const productExists = productDatabase.rows[0]
 
+    const productImages = await getProductImagesUrl(id)
+
     if (!productExists) {
       throw new AppError('Product does not exists!')
     }
@@ -18,12 +20,9 @@ module.exports = {
       productExists.price,
       productExists.amount
       )
-      product.id = productExists.id
-
-    const imagesUrl = await getProductImagesUrl(id)
-
-    const productIncludeImages = {...product, imagesUrl}
+    product.id = productExists.id
+    product.productsImages = productImages
     
-    return productIncludeImages
+    return product
   }
 }
