@@ -42,7 +42,6 @@ routes.post('/auth', loginController)
 routes.put('/admin', isAdmin, updateAdminController)
 routes.get('/admin/list', isAdmin, getAllAdminsController)
 
-
 routes.get('/product', getAllProductController)
 routes.get('/product/:id', getProductByIdController)
 routes.get('/product/image/:id', getProductImageByIdController)
