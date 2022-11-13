@@ -1,4 +1,5 @@
 const { client } = require('../../database/connection')
+const ProductImage = require('../../models/productImage')
 
 module.exports = {
   async getProductImagesUrl(product_id) {
@@ -6,7 +7,11 @@ module.exports = {
     const productImagesExists = productImagesDatabase.rows
 
     const imagesUrl = productImagesExists.map(url => {
-      return `${process.env.APP_API_URL}/files/${url.name}`
+      const productImages = new ProductImage(url.name, product_id)
+      productImages.id = url.id
+      productImages.url = `${process.env.APP_API_URL}/files/${url.name}`
+      
+      return productImages
     })
 
     return imagesUrl
