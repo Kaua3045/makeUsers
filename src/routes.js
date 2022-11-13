@@ -18,7 +18,8 @@ const {
   deleteProductController,
   deleteProductImageController,
   getProductImageByIdController,
-  getAllProductController
+  getAllProductController,
+  getAllProductImagesController
 } = require('./controller/productController')
 
 const { loginController } = require('./controller/authController')
@@ -45,6 +46,7 @@ routes.get('/admin/list', isAdmin, getAllAdminsController)
 routes.get('/product', getAllProductController)
 routes.get('/product/:id', getProductByIdController)
 routes.get('/product/image/:id', getProductImageByIdController)
+routes.get('/product/:id/images', getAllProductImagesController)
 
 routes.post('/product/create', createProductController)
 routes.patch('/product/create/images/:id', upload.array('images'), createProductImagesController)

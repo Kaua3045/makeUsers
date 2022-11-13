@@ -7,6 +7,7 @@ const { deleteProduct } = require("../services/products/deleteProductService")
 const { deleteProductImage } = require("../services/products/deleteProductImageService")
 const { getProductImageById } = require("../services/products/getProductImageByIdService")
 const { getAllProductAndImages } = require("../services/products/getAllProductService")
+const { getProductImagesUrl } = require("../services/products/getProductImagesUrlService")
 
 module.exports = {
   async createProductController(req, res) {
@@ -46,6 +47,12 @@ module.exports = {
 
   async getAllProductController(req, res) {
     const result = await getAllProductAndImages()
+    return res.json(result)
+  },
+
+  async getAllProductImagesController(req, res) {
+    const { id } = req.params
+    const result = await getProductImagesUrl(id)
     return res.json(result)
   },
 
