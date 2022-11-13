@@ -1,6 +1,6 @@
 const { client } = require('../../database/connection')
 const AppError = require('../../errors/appError')
-const { deleteProductImage } = require('./deleteProductImageService')
+const { deleteAllProductImage } = require('./deleteProductImageService')
 const { getProductById } = require('./getProductByIdService')
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
       throw new AppError('Product does not exists!')
     }
 
-    await deleteProductImage(id)
+    await deleteAllProductImage(id)
     await client.query('DELETE FROM products WHERE id = $1', [product.id])
   }
 }
