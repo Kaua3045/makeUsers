@@ -1,13 +1,17 @@
 const Product = require("../models/product")
 const ProductImage = require("../models/productImage")
-const { createProduct } = require("../services/products/createProductService")
-const { createProductImages } = require('../services/products/createProductImageService')
-const { getProductById } = require("../services/products/getProductByIdService")
-const { deleteProduct } = require("../services/products/deleteProductService")
-const { deleteProductImage } = require("../services/products/deleteProductImageService")
-const { getProductImageById } = require("../services/products/getProductImageByIdService")
-const { getAllProductAndImages } = require("../services/products/getAllProductService")
-const { getProductImagesUrl } = require("../services/products/getProductImagesUrlService")
+const {
+  createProduct,
+  getProductById,
+  deleteProduct,
+  getAllProductAndImages
+} = require('../services/products')
+const {
+  createProductImages,
+  deleteProductImage,
+  getProductImageById,
+  getProductImagesUrl
+} = require('../services/products/productImages')
 
 module.exports = {
   async createProductController(req, res) {

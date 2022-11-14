@@ -1,6 +1,6 @@
 const { client } = require('../../database/connection')
 const AppError = require('../../errors/appError')
-const { deleteAllProductImage } = require('./deleteProductImageService')
+const { deleteAllProductImage } = require('./productImages')
 const { getProductById } = require('./getProductByIdService')
 
 module.exports = {

@@ -1,7 +1,7 @@
 const { client } = require('../../database/connection')
 const AppError = require('../../errors/appError')
 const Product = require('../../models/product')
-const { getProductImagesUrl } = require('./getProductImagesUrlService')
+const { getProductImagesUrl } = require('./productImages')
 
 module.exports = {
   async getProductById(id) {

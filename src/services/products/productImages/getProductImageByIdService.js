@@ -1,5 +1,5 @@
-const { client } = require('../../database/connection')
-const AppError = require('../../errors/appError')
+const { client } = require('../../../database/connection')
+const AppError = require('../../../errors/appError')
 
 module.exports = {
   async getProductImageById(id) {

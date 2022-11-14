@@ -1,8 +1,6 @@
 const { client } = require('../../database/connection')
-const { saveFile } = require('../../database/diskStorage')
 const AppError = require('../../errors/appError')
 const Product = require('../../models/product')
-const ProductImage = require('../../models/productImage')
 
 module.exports = {
   async createProduct(productData) {

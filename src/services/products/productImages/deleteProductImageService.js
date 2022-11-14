@@ -1,6 +1,6 @@
-const { client } = require('../../database/connection')
-const { deleteFile } = require("../../database/diskStorage")
-const AppError = require('../../errors/appError')
+const { client } = require('../../../database/connection')
+const { deleteFile } = require("../../../database/diskStorage")
+const AppError = require('../../../errors/appError')
 
 module.exports = {
   async deleteAllProductImage(product_id) {

@@ -1,5 +1,5 @@
-const { client } = require('../../database/connection')
-const ProductImage = require('../../models/productImage')
+const { client } = require('../../../database/connection')
+const ProductImage = require('../../../models/productImage')
 
 module.exports = {
   async getProductImagesUrl(product_id) {

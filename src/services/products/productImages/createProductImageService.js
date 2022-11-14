@@ -1,6 +1,6 @@
-const { client } = require('../../database/connection')
-const { saveFile } = require('../../database/diskStorage')
-const ProductImage = require("../../models/productImage")
+const { client } = require('../../../database/connection')
+const { saveFile } = require('../../../database/diskStorage')
+const ProductImage = require("../../../models/productImage")
 
 module.exports = {
   async createProductImages(productImages, id) {
