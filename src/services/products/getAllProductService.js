@@ -4,30 +4,33 @@ const ProductImage = require('../../models/productImage')
 
 module.exports = {
   async getAllProductAndImages() {
-    const productsDatabase = await client.query(`
-    SELECT 
-    products.*,
-    products_images.id AS imageId,
-    products_images.name AS imageName,
-    products_images.product_id AS productImgId
-    FROM products INNER JOIN products_images 
-    ON products.id = products_images.product_id`)
+    const { rows } = await client.query(`
+    SELECT products.*, (
+      SELECT json_agg(json_build_object(
+        'id', products_images.id,
+        'name', products_images.name
+      ))
+      FROM products_images
+      WHERE products_images.product_id = products.id
+    ) AS images FROM products`)
 
-    const products = productsDatabase.rows.map(products => {
-      const urlImage = `${process.env.APP_API_URL}/files/${products.imagename}`
-      const productImage = new ProductImage(products.imagename, products.id)
-      productImage.id = products.imageid
-      productImage.url = urlImage
-
+    const products = rows.map(productDatabase => {
       const product = new Product(
-        products.name,
-        products.description,
-        products.price,
-        products.amount
+        productDatabase.name,
+        productDatabase.description,
+        productDatabase.price,
+        productDatabase.amount
       )
-      product.id = products.id
-      product.productsImages = productImage
+      product.id = productDatabase.id
+
+      product.productsImages = productDatabase.images.map(img => {
+        const productImage = new ProductImage(img.name, product.id)
+        productImage.id = img.id
+        productImage.url = productImage.getProductImageUrl(img.name)
         
+        return productImage
+      })
+
       return product
     })
 

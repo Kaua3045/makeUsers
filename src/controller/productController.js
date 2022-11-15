@@ -30,9 +30,9 @@ module.exports = {
 
     const productImages = new ProductImage(files, id)
 
-    const result = await createProductImages(productImages, id)
+    await createProductImages(productImages, id)
 
-    return res.json(result)
+    return res.status(204).end()
   },
 
   async getProductByIdController(req, res) {

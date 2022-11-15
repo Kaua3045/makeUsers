@@ -9,7 +9,7 @@ module.exports = {
     const imagesUrl = productImagesExists.map(url => {
       const productImages = new ProductImage(url.name, product_id)
       productImages.id = url.id
-      productImages.url = `${process.env.APP_API_URL}/files/${url.name}`
+      productImages.url = productImages.getProductImageUrl(url.name)
       
       return productImages
     })

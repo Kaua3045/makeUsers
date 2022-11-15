@@ -14,6 +14,10 @@ class ProductImage {
     this.name = name
     this.product_id = product_id
   }
+
+  getProductImageUrl(name) {
+    return `${process.env.APP_API_URL}/files/${name}`
+  }
 }
 
 module.exports = ProductImage

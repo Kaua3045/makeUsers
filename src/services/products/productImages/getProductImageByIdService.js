@@ -1,5 +1,6 @@
 const { client } = require('../../../database/connection')
 const AppError = require('../../../errors/appError')
+const ProductImage = require('../../../models/productImage')
 
 module.exports = {
   async getProductImageById(id) {
@@ -10,6 +11,10 @@ module.exports = {
       throw new AppError('Image does not exists!')
     }
 
-    return imageExists
+    const productImage = new ProductImage(imageExists.name, imageExists.product_id)
+    productImage.id = imageExists.id
+    productImage.url = productImage.getProductImageUrl(imageExists.name)
+
+    return productImage
   }
 }
