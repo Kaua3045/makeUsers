@@ -31,8 +31,8 @@ const upload = require('./middlewares/uploadMiddleware')
 routes.get('/users/all', auth, getAllUsersController)
 routes.get('/users/', auth, getUserByIdController)
 routes.post('/users/create', createUserController)
-routes.put('/users/update', auth, updateUserController)
-routes.put('/users/resetpassword/:id', resetPasswordUserController)
+routes.patch('/users/update', auth, updateUserController)
+routes.patch('/users/resetpassword/:id', resetPasswordUserController)
 routes.delete('/users/delete/:id', auth, deleteUserController)
 
 routes.patch('/users/avatar', auth, upload.single('avatar'), updateUserAvatarController)
@@ -47,10 +47,10 @@ routes.get('/product/:id', getProductByIdController)
 routes.get('/product/image/:id', getProductImageByIdController)
 routes.get('/product/:id/images', getAllProductImagesController)
 
-routes.post('/product/create', createProductController)
-routes.patch('/product/create/images/:id', upload.array('images'), createProductImagesController)
+routes.post('/product/create', isAdmin, createProductController)
+routes.patch('/product/create/images/:id', isAdmin, upload.array('images'), createProductImagesController)
 
-routes.delete('/product/delete/:id', deleteProductController)
-routes.delete('/product/delete/image/:id', deleteProductImageController)
+routes.delete('/product/delete/:id', isAdmin, deleteProductController)
+routes.delete('/product/delete/image/:id', isAdmin, deleteProductImageController)
 
 module.exports = routes
