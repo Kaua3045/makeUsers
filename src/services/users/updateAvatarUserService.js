@@ -1,6 +1,6 @@
 const { client } = require('../../database/connection')
 const AppError = require('../../errors/appError')
-const { deleteFile, saveFile, urlAvatar } = require('../../database/diskStorage')
+const { deleteFile, saveFile } = require('../../database/diskStorage')
 
 module.exports = {
   async updateUserAvatar(id, avaterFilename) {
@@ -18,12 +18,10 @@ module.exports = {
     const avatarFile = await saveFile(avaterFilename)
 
     userExists.avatar = avatarFile
-    avatar_url = urlAvatar(avatarFile)
+    avatar = `${process.env.APP_API_URL}/files/${avatarFile}`
     
     await client.query('UPDATE users SET avatar = $1 WHERE id = $2', [userExists.avatar, id])
-
-    const user = {avatar_url, ...userExists}
-
-    return { user }
+    
+    return avatar
   }
 }

@@ -5,6 +5,8 @@ class User {
   name
   email
   password
+  avatar
+  isAdmin
 
   constructor(name, email, password) {
     if (!this.id) {
@@ -14,6 +16,10 @@ class User {
     this.name = name
     this.email = email
     this.password = password
+  }
+
+  getAvatarUrl(avatarName) {
+    return `${process.env.APP_API_URL}/files/${avatarName}`
   }
 }
 

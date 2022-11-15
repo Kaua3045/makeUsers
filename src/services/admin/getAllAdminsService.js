@@ -1,5 +1,5 @@
 const { client } = require('../../database/connection')
-const { urlAvatar } = require('../../database/diskStorage')
+const User = require('../../models/user')
 
 module.exports = {
   async getAllAdmins() {
@@ -7,11 +7,12 @@ module.exports = {
     const admins = rows
 
     const adminsUpdated = admins.map(admins => {
-      avatar_url = urlAvatar(admins.avatar)
-      delete admins.avatar
+      const userAdmin = new User(admins.name, admins.email, admins.password)
+      userAdmin.id = admins.id
+      userAdmin.isAdmin = admins.admin
+      userAdmin.avatar = userAdmin.getAvatarUrl(admins.avatar)
 
-      const admin = {avatar_url, ...admins}
-      return { admin }
+      return userAdmin
     })
 
     return adminsUpdated

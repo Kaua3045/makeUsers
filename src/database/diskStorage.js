@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 
 const { tmpFolder, uploadsFolder} = require('../config/uploadConfig')
+const AppError = require('../errors/appError')
 
 module.exports = {
   async saveFile(file) {
@@ -19,13 +20,9 @@ module.exports = {
     try {
       await fs.promises.stat(filePath)
     } catch (error) {
-      return // TODO tratar o errro
+      throw new AppError(error.message, null, 500)
     }
 
     await fs.promises.unlink(filePath)
-  },
-
-  urlAvatar(avatarName) {
-    return `${process.env.APP_API_URL}/files/${avatarName}`
   }
 }

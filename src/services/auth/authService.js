@@ -1,8 +1,8 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { client } = require("../../database/connection")
-const { urlAvatar } = require('../../database/diskStorage')
 const AppError = require('../../errors/appError')
+const User = require('../../models/user')
 
 module.exports = {
   async auth(email, password) {
@@ -16,13 +16,13 @@ module.exports = {
       throw new AppError('User does not exists!')
     }
     
-    avatar_url = urlAvatar(userDatabase.avatar)
+    const user = new User(userDatabase.name, userDatabase.email, userDatabase.password)
+    user.id = userDatabase.id
+    user.isAdmin = userDatabase.admin
+    user.avatar = user.getAvatarUrl(userDatabase.avatar)
 
-    delete userDatabase.password
-    delete userDatabase.avatar
+    delete user.password
     
-    const user = {avatar_url, ...userDatabase}
-
     const token = jwt.sign({ id, user }, process.env.SECRET, {
       expiresIn: '60m' // 60 minutos
     })
