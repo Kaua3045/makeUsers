@@ -12,10 +12,11 @@
 
 - [NodeJS](https://nodejs.org/en/)
 - [Express](https://expressjs.com/pt-br)
+- [PostgreSQL](https://www.postgresql.org/)
 
 <br>
 
-## 💻 Projeto
+## 💻 Project
 
 Project to create a user (admin or normal) and create products, adding images to products, listing them and deleting them
 
