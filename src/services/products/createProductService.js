@@ -1,4 +1,5 @@
 const { client } = require('../../database/connection')
+const { invalidate, save } = require('../../database/redis')
 const AppError = require('../../errors/appError')
 const Product = require('../../models/product')
 
@@ -25,6 +26,8 @@ module.exports = {
         productCreated.amount
       ]
       )
+
+      await invalidate('products-all')
       
       return productCreated
     } else {

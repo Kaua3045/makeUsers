@@ -1,5 +1,6 @@
 const { client } = require('../../../database/connection')
 const { saveFile } = require('../../../database/diskStorage')
+const { invalidate } = require('../../../database/redis')
 const ProductImage = require("../../../models/productImage")
 
 module.exports = {
@@ -25,6 +26,8 @@ module.exports = {
           productImagesCreated.product_id
         ])
       }
+
+      await invalidate('products-all')
     }
   }
 }
