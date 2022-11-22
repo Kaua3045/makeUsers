@@ -3,6 +3,7 @@ const { deleteFile } = require("../../../database/diskStorage")
 const { product_prefix } = require('../../../config/redisPrefixes')
 const { invalidatePrefix } = require('../../../database/redis')
 const AppError = require('../../../errors/appError')
+const ImageNotExistsError = require('../../../errors/imagesErrors/imageNotExists')
 
 module.exports = {
   async deleteAllProductImage(product_id) {
@@ -25,7 +26,7 @@ module.exports = {
     const productImagesExists = productImagesDatabase.rows[0]
 
     if (!productImagesExists) {
-      throw new AppError('Image does not exists!')
+      throw new ImageNotExistsError()
     }
 
     await client.query('DELETE FROM products_images WHERE id = $1', [productImagesExists.id])

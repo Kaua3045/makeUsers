@@ -1,16 +1,16 @@
 const { client } = require('../../database/connection')
 const { product_prefix } = require('../../config/redisPrefixes')
 const { invalidatePrefix } = require('../../database/redis')
-const AppError = require('../../errors/appError')
 const { deleteAllProductImage } = require('./productImages')
 const { getProductById } = require('./getProductByIdService')
+const ProductNotExistsError = require('../../errors/productsErrors/productNotExists')
 
 module.exports = {
   async deleteProduct(id) {
     const product = await getProductById(id)
     
     if (!product) {
-      throw new AppError('Product does not exists!')
+      throw new ProductNotExistsError()
     }
 
     await deleteAllProductImage(id)

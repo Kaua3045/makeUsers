@@ -1,8 +1,8 @@
 const { client } = require('../../database/connection')
 const { product_prefix } = require('../../config/redisPrefixes')
 const { invalidatePrefix } = require('../../database/redis')
-const AppError = require('../../errors/appError')
 const Product = require('../../models/product')
+const ProductExistsError = require('../../errors/productsErrors/productExists')
 
 module.exports = {
   async createProduct(productData) {
@@ -10,7 +10,7 @@ module.exports = {
     const productExists = rows[0]
 
     if (productExists) {
-      throw new AppError('Product already exists!')
+      throw new ProductExistsError()
     }
 
     const productCreated = new Product(
