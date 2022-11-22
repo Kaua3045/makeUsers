@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const { client } = require('../../database/connection')
-const AppError = require('../../errors/appError')
+const UserExistsError = require('../../errors/usersErrors/userExists')
 const User = require('../../models/user')
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
 
       return userCreated
     } else {
-     throw new AppError('User already exists!')
+     throw new UserExistsError()
     }
   }
 }

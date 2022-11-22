@@ -1,5 +1,5 @@
 const { client } = require('../../database/connection')
-const AppError = require('../../errors/appError')
+const UserNotExistsError = require('../../errors/usersErrors/userNotExists')
 const { deleteFile, saveFile } = require('../../database/diskStorage')
 
 module.exports = {
@@ -8,7 +8,7 @@ module.exports = {
     const userExists = rows[0]
 
     if (!userExists) {
-      throw new AppError('User does not exists!')
+      throw new UserNotExistsError()
     }
 
     if (userExists.avatar) {

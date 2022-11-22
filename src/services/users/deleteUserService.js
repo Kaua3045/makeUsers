@@ -1,5 +1,5 @@
 const { client } = require('../../database/connection')
-const AppError = require('../../errors/appError')
+const UserNotExistsError = require('../../errors/usersErrors/userNotExists')
 
 module.exports = {
   async deleteUser(id) {
@@ -7,7 +7,7 @@ module.exports = {
     const usersExists = rows[0];
 
     if (!usersExists) {
-      throw new AppError('User does not exists!')
+      throw new UserNotExistsError()
     }
 
     await client.query('DELETE FROM users WHERE id = $1', [id])

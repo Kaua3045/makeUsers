@@ -1,10 +1,10 @@
-const { client } = require('../../database/connection')
-const UserNotExistsError = require('../../errors/usersErrors/userNotExists')
-const User = require('../../models/user')
+const { client } = require("../../database/connection")
+const UserNotExistsError = require("../../errors/usersErrors/userNotExists")
+const User = require("../../models/user")
 
 module.exports = {
-  async getUserById(id) {
-    const { rows } = await client.query('SELECT id, name, email, password, avatar, admin FROM users WHERE id = $1', [ id ])
+  async getUserByEmail(email) {
+    const { rows } = await client.query('SELECT * FROM users where email = $1', [email])
     const userDatabase = rows[0]
 
     if (!userDatabase) {

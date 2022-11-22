@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const { client } = require('../../database/connection')
-const AppError = require('../../errors/appError')
+const UserNotExistsError = require('../../errors/usersErrors/userNotExists')
 
 module.exports = {
   async resetPasswordUser(id, newPassword) {
@@ -8,7 +8,7 @@ module.exports = {
     const userExists = rows[0];
 
     if (!userExists) {
-      throw new AppError('User does not exists!')
+      throw new UserNotExistsError()
     }
 
     const updatedPassword = await bcrypt.hash(newPassword, 8)

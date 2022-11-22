@@ -1,5 +1,5 @@
 const { client } = require('../../database/connection')
-const AppError = require('../../errors/appError')
+const UserNotExistsError = require('../../errors/usersErrors/userNotExists')
 
 module.exports = {
   async updateUser(id, { ...rest }) {
@@ -7,7 +7,7 @@ module.exports = {
     const userExists = rows[0];
 
     if (!userExists) {
-      throw new AppError('User does not exists!')
+      throw new UserNotExistsError()
     }
 
     if (rest.email) {
