@@ -1,27 +1,41 @@
+const { product_prefix } = require('../../config/redisPrefixes')
 const { client } = require('../../database/connection')
+const { recover, save } = require('../../database/redis')
 const AppError = require('../../errors/appError')
 const Product = require('../../models/product')
 const { getProductImagesUrl } = require('./productImages')
 
 module.exports = {
   async getProductById(id) {
-    const productDatabase = await client.query('SELECT * FROM products WHERE id = $1', [id])    
-    const productExists = productDatabase.rows[0]
+    const productInMemory = await recover(`${product_prefix}:${id}`)
+    // const productDatabase = await client.query('SELECT * FROM products WHERE id = $1', [id])    
+    // const productExists = productDatabase.rows[0]
 
-    const productImages = await getProductImagesUrl(id)
+    // const productImages = await getProductImagesUrl(id)
 
-    if (!productExists) {
+    if (productInMemory) {
+      return productInMemory
+    }
+
+    const productDatabase = await client.query('SELECT * FROM products WHERE id = $1', [id])
+    const productExistsInDatabase = productDatabase.rows[0]
+
+    if (!productExistsInDatabase) {
       throw new AppError('Product does not exists!')
     }
 
+    const productImages = await getProductImagesUrl(id)
+
     const product = new Product(
-      productExists.name,
-      productExists.description,
-      productExists.price,
-      productExists.amount
+      productExistsInDatabase.name,
+      productExistsInDatabase.description,
+      productExistsInDatabase.price,
+      productExistsInDatabase.amount
       )
-    product.id = productExists.id
-    product.productsImages = productImages
+    product.id = productExistsInDatabase.id
+    product.productsImages = productImages ? productImages : 'not images'
+
+    await save(`${product_prefix}:${product.id}`, product)
     
     return product
   }

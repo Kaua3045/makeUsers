@@ -1,11 +1,12 @@
 const { client } = require('../../database/connection')
-const { recover, save } = require('../../database/redis')
+const { product_prefix } = require('../../config/redisPrefixes')
+const { save, recoverPrefix } = require('../../database/redis')
 const Product = require('../../models/product')
 const ProductImage = require('../../models/productImage')
 
 module.exports = {
   async getAllProductAndImages() {
-    let productsDatabase = await recover(`products-all`)
+    let productsDatabase = await recoverPrefix(product_prefix)
 
     if (!productsDatabase) {
       const { rows } = await client.query(`
@@ -27,18 +28,18 @@ module.exports = {
         )
         product.id = productDatabase.id
   
-        product.productsImages = productDatabase.images? productDatabase.images.map(img => {
+        product.productsImages = productDatabase.images ? productDatabase.images.map(img => {
           const productImage = new ProductImage(img.name, product.id)
           productImage.id = img.id
           productImage.url = productImage.getProductImageUrl(img.name)
           
           return productImage
-        }) : null
-  
+        }) : 'not images'
+
+        save(`${product_prefix}:${product.id}`, product)
+
         return product
       })
-
-      await save('products-all', products)
 
       return products
     }

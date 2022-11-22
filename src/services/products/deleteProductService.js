@@ -1,5 +1,6 @@
 const { client } = require('../../database/connection')
-const { invalidate } = require('../../database/redis')
+const { product_prefix } = require('../../config/redisPrefixes')
+const { invalidatePrefix } = require('../../database/redis')
 const AppError = require('../../errors/appError')
 const { deleteAllProductImage } = require('./productImages')
 const { getProductById } = require('./getProductByIdService')
@@ -14,6 +15,6 @@ module.exports = {
 
     await deleteAllProductImage(id)
     await client.query('DELETE FROM products WHERE id = $1', [product.id])
-    await invalidate('products-all')
+    await invalidatePrefix(product_prefix)
   }
 }

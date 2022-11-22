@@ -1,6 +1,7 @@
 const { client } = require('../../../database/connection')
 const { saveFile } = require('../../../database/diskStorage')
-const { invalidate } = require('../../../database/redis')
+const { product_prefix } = require('../../../config/redisPrefixes')
+const { invalidatePrefix } = require('../../../database/redis')
 const ProductImage = require("../../../models/productImage")
 
 module.exports = {
@@ -16,7 +17,6 @@ module.exports = {
       for (let i = 0; i < imagesMap.length; i++) {
         const imageFile = await saveFile(imagesMap[i])
         const productImagesCreated = new ProductImage(imageFile, id)
-        productImagesCreated.id = productImages.id
 
         await client.query(`
         INSERT INTO products_images (id, name, product_id) VALUES ($1, $2, $3)`,
@@ -27,7 +27,7 @@ module.exports = {
         ])
       }
 
-      await invalidate('products-all')
+      await invalidatePrefix(product_prefix)
     }
   }
 }

@@ -1,6 +1,7 @@
 const { client } = require('../../../database/connection')
 const { deleteFile } = require("../../../database/diskStorage")
-const { invalidate } = require('../../../database/redis')
+const { product_prefix } = require('../../../config/redisPrefixes')
+const { invalidatePrefix } = require('../../../database/redis')
 const AppError = require('../../../errors/appError')
 
 module.exports = {
@@ -16,7 +17,7 @@ module.exports = {
       await deleteFile(ImagesName[i])
     }
 
-    await invalidate('products-all')
+    await invalidatePrefix(product_prefix)
   },
 
   async deleteProductImage(id) {
@@ -29,6 +30,6 @@ module.exports = {
 
     await client.query('DELETE FROM products_images WHERE id = $1', [productImagesExists.id])
     await deleteFile(productImagesExists.name)
-    await invalidate('products-all')
+    await invalidatePrefix(product_prefix)
   }
 }
