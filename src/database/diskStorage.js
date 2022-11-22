@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 
 const { tmpFolder, uploadsFolder} = require('../config/uploadConfig')
-const AppError = require('../errors/appError')
+const InternalServerError = require('../errors/serverErrors/internalServerError')
 
 module.exports = {
   async saveFile(file) {
@@ -20,7 +20,7 @@ module.exports = {
     try {
       await fs.promises.stat(filePath)
     } catch (error) {
-      throw new AppError(error.message, null, 500)
+      throw new InternalServerError()
     }
 
     await fs.promises.unlink(filePath)

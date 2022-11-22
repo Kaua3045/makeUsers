@@ -1,5 +1,7 @@
 const { client } = require('../../database/connection')
+const { getUserByEmail } = require('./getUserByEmailService')
 const UserNotExistsError = require('../../errors/usersErrors/userNotExists')
+const UserEmailExistsError = require('../../errors/usersErrors/userEmailExists')
 
 module.exports = {
   async updateUser(id, { ...rest }) {
@@ -11,9 +13,9 @@ module.exports = {
     }
 
     if (rest.email) {
-      const userByEmail = await client.query('SELECT * FROM users WHERE email = $1', [rest.email])
+      const userByEmail = await getUserByEmail(rest.email)
 
-      if (userByEmail.rows[0]) throw new AppError('Email already used')
+      if (userByEmail) throw new UserEmailExistsError()
     }
 
     const updatedUser = Object.assign(userExists, rest)

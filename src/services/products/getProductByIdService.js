@@ -1,7 +1,6 @@
 const { product_prefix } = require('../../config/redisPrefixes')
 const { client } = require('../../database/connection')
 const { recover, save } = require('../../database/redis')
-const AppError = require('../../errors/appError')
 const ProductNotExistsError = require('../../errors/productsErrors/productNotExists')
 const Product = require('../../models/product')
 const { getProductImagesUrl } = require('./productImages')

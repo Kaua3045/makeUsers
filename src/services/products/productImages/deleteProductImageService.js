@@ -2,7 +2,6 @@ const { client } = require('../../../database/connection')
 const { deleteFile } = require("../../../database/diskStorage")
 const { product_prefix } = require('../../../config/redisPrefixes')
 const { invalidatePrefix } = require('../../../database/redis')
-const AppError = require('../../../errors/appError')
 const ImageNotExistsError = require('../../../errors/imagesErrors/imageNotExists')
 
 module.exports = {
