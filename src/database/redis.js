@@ -8,8 +8,8 @@ const redis = new Redis({
   db: process.env.DATABASE_REDIS
 })
 
-const save = async (key, value) => {
-  await redis.set(key, JSON.stringify(value))
+const save = (key, value) => {
+  redis.set(key, JSON.stringify(value))
 }
 
 const recover = async (key) => {
@@ -20,6 +20,29 @@ const recover = async (key) => {
   }
 
   const parsedData = JSON.parse(data)
+
+  return parsedData
+}
+
+const recoverPrefix = async (prefix) => {
+  const keys = await redis.keys(`${prefix}:*`)
+  const pipeline = redis.pipeline()
+
+  if (keys.length === 0) {
+    return null
+  }
+
+  keys.forEach(key => {
+    pipeline.get(key)
+  })
+
+  const result = await pipeline.exec()
+
+  const parsedData = result.map(data => {
+    if (data.length > 0) {
+      return JSON.parse(data[1])
+    }
+  })
 
   return parsedData
 }
@@ -43,6 +66,7 @@ module.exports = {
   redis,
   save,
   recover,
+  recoverPrefix,
   invalidate,
   invalidatePrefix
 }
