@@ -1,3 +1,4 @@
 /node_modules
-tmp/uploads/*
+tmp/avatars/*
+tmp/imagesProducts/*
 .env
