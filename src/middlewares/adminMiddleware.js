@@ -16,15 +16,15 @@ module.exports = {
     try {
       const tokenVerified = jwt.verify(token, process.env.SECRET)
 
-      if (tokenVerified.user.admin === false) {
+      if (tokenVerified.userFind.isAdmin === false) {
         return res.status(403).json({ message: 'You do not have permission to access this'})
       }
 
-      if (tokenVerified.user.email === emailToUpdateAdmin.email) {
+      if (tokenVerified.userFind.email === emailToUpdateAdmin.email) {
         return res.status(403).json({ message: 'You can not do that' })
       }
 
-      next()
+      return next()
     } catch (error) {
       throw new InvalidTokenError()
     }
