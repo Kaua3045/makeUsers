@@ -17,11 +17,11 @@ const upload = require('../middlewares/uploadMiddleware')
 userRouter.get('/all', auth, getAllUsersController)
 userRouter.get('/', auth, getUserByIdController)
 
-userRouter.post('/users/create', createUserController)
-userRouter.patch('/users/update', auth, updateUserController)
-userRouter.patch('/users/resetpassword/:id', resetPasswordUserController)
-userRouter.delete('/users/delete/:id', auth, deleteUserController)
+userRouter.post('/create', createUserController)
+userRouter.patch('/update', auth, updateUserController)
+userRouter.patch('/resetpassword/:id', resetPasswordUserController)
+userRouter.delete('/delete/:id', auth, deleteUserController)
 
-userRouter.patch('/users/avatar', auth, upload.single('avatar'), updateUserAvatarController)
+userRouter.patch('/avatar', auth, upload.single('avatar'), updateUserAvatarController)
 
 module.exports = userRouter
