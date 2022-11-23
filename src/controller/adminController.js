@@ -4,7 +4,7 @@ const { updateAdmin } = require("../services/admin/updateAdminService")
 module.exports = {
   async updateAdminController(req, res) {
     const { email, admin } = req.body
-    await updateAdmin(email, admin)
+    await updateAdmin(req.user.id, email, admin)
 
     return res.status(200).end()
   },

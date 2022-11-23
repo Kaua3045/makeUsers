@@ -6,8 +6,9 @@ const {
   updateAdminController 
 } = require('../controller/adminController')
 const { isAdmin } = require('../middlewares/adminMiddleware')
+const { auth } = require('../middlewares/authMiddleware')
 
-adminRouter.get('/list', isAdmin, getAllAdminsController)
-adminRouter.put('/update', isAdmin, updateAdminController)
+adminRouter.get('/list', auth, isAdmin, getAllAdminsController)
+adminRouter.put('/update', auth, isAdmin, updateAdminController)
 
 module.exports = adminRouter

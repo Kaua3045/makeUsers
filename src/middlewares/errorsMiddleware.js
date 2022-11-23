@@ -7,7 +7,8 @@ module.exports = {
       nameVerify.includes('image') || 
       nameVerify.includes('user') ||
       nameVerify.includes('token') ||
-      nameVerify.includes('InternalServerError')
+      nameVerify.includes('InternalServerError') ||
+      nameVerify.includes('admin')
       ) {
       return res.status(err.statusCode).json({
         message: err.message
