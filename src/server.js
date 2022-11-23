@@ -1,17 +1,18 @@
+require('dotenv/config')
+require('express-async-errors')
+
 const express =  require('express')
 const cors = require('cors')
-require('express-async-errors')
-const server = express();
+const createTables = require('./database/tables')
+const { errorsMiddleware } = require('./middlewares/errorsMiddleware')
+const router = require('./routes')
 
-require('dotenv/config')
-
-const createTables = require('./database/tables');
-const { errorsMiddleware } = require('./middlewares/errorsMiddleware');
+const server = express()
 createTables()
 
 server.use(cors())
 server.use(express.json())
-server.use('/api', require('./routes'))
+server.use('/api', router)
 server.use('/files', express.static('tmp/uploads'))
 server.use(errorsMiddleware)
 
