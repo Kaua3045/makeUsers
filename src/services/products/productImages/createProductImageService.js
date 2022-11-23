@@ -3,6 +3,7 @@ const { saveFile } = require('../../../database/diskStorage')
 const { product_prefix } = require('../../../config/redisPrefixes')
 const { invalidatePrefix } = require('../../../database/redis')
 const ProductImage = require("../../../models/productImage")
+const { imagesProductsFolder } = require('../../../config/uploadConfig')
 
 module.exports = {
   async createProductImages(productImages, id) {
@@ -15,7 +16,7 @@ module.exports = {
       })
 
       for (let i = 0; i < imagesMap.length; i++) {
-        const imageFile = await saveFile(imagesMap[i])
+        const imageFile = await saveFile(imagesMap[i], imagesProductsFolder)
         const productImagesCreated = new ProductImage(imageFile, id)
 
         await client.query(`

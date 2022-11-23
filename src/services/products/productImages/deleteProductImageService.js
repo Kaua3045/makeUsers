@@ -3,6 +3,7 @@ const { deleteFile } = require("../../../database/diskStorage")
 const { product_prefix } = require('../../../config/redisPrefixes')
 const { invalidatePrefix } = require('../../../database/redis')
 const ImageNotExistsError = require('../../../errors/imagesErrors/imageNotExists')
+const { imagesProductsFolder } = require('../../../config/uploadConfig')
 
 module.exports = {
   async deleteAllProductImage(product_id) {
@@ -14,7 +15,7 @@ module.exports = {
     })
 
     for (let i = 0; i < ImagesName.length; i++) {
-      await deleteFile(ImagesName[i])
+      await deleteFile(ImagesName[i], imagesProductsFolder)
     }
 
     await invalidatePrefix(product_prefix)
@@ -29,7 +30,7 @@ module.exports = {
     }
 
     await client.query('DELETE FROM products_images WHERE id = $1', [productImagesExists.id])
-    await deleteFile(productImagesExists.name)
+    await deleteFile(productImagesExists.name, imagesProductsFolder)
     await invalidatePrefix(product_prefix)
   }
 }

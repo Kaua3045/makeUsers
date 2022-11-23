@@ -1,6 +1,7 @@
 const { client } = require('../../database/connection')
 const UserNotExistsError = require('../../errors/usersErrors/userNotExists')
 const { deleteFile, saveFile } = require('../../database/diskStorage')
+const { avatarsFolder } = require('../../config/uploadConfig')
 
 module.exports = {
   async updateUserAvatar(id, avaterFilename) {
@@ -12,10 +13,10 @@ module.exports = {
     }
 
     if (userExists.avatar) {
-      await deleteFile(userExists.avatar)
+      await deleteFile(userExists.avatar, avatarsFolder)
     }
 
-    const avatarFile = await saveFile(avaterFilename)
+    const avatarFile = await saveFile(avaterFilename, avatarsFolder)
 
     userExists.avatar = avatarFile
     avatar = `${process.env.APP_API_URL}/files/${avatarFile}`

@@ -1,9 +1,11 @@
 const path = require('path')
 
 const tmpFolder = path.resolve(__dirname, '../../tmp/')
-const uploadsFolder = path.resolve(tmpFolder, 'uploads')
+const avatarsFolder = path.resolve(tmpFolder, 'avatars')
+const imagesProductsFolder = path.resolve(tmpFolder, 'imagesProducts')
 
 module.exports = {
   tmpFolder,
-  uploadsFolder
+  avatarsFolder,
+  imagesProductsFolder
 }
