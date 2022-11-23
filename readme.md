@@ -13,6 +13,7 @@
 - [NodeJS](https://nodejs.org/en/)
 - [Express](https://expressjs.com/pt-br)
 - [PostgreSQL](https://www.postgresql.org/)
+- [Redis](https://redis.io/)
 
 <br>
 
@@ -32,5 +33,5 @@ git clone https://github.com/Kaua3045/makeUsers.git && cd makeUsers
 npm i
 
 # running application
-npm dev
+npm run dev
 ```
