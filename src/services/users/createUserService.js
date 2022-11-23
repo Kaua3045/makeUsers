@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const { client } = require('../../database/connection')
 const UserExistsError = require('../../errors/usersErrors/userExists')
+const { validateAllUserData } = require('../../validators/validation')
 const User = require('../../models/user')
 
 module.exports = {
