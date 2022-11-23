@@ -8,9 +8,9 @@
 
 ### Users:
 
-1. **`/users/create`**: Create a new user, sending, name, email and password
+1. **`/users/create`**: Create a new user, sending, name, email and password (8 characters, 1 lowercase, 1 uppercase, 1 numeric)
 
-2. **`/users/resetpassword/:id`**: Reset password, sending newPassword
+2. **`/users/resetpassword/:id`**: Reset password, sending newPassword (8 characters, 1 lowercase, 1 uppercase, 1 numeric)
 
 to use the routes below you need to be logged in and send a barear token which is given to you after logging in
 
