@@ -16,9 +16,8 @@ module.exports = {
     }
 
     delete userFind.password
-    const id = userFind.id
     
-    const token = jwt.sign({ id, userFind }, process.env.SECRET, {
+    const token = jwt.sign({ id: userFind.id, userFind }, process.env.SECRET, {
       expiresIn: '60m' // 60 minutos
     })
 
