@@ -18,7 +18,7 @@ class UserRepository {
     const userDatabase = await client.query('SELECT * FROM users WHERE id = $1', [id])
     const user = userDatabase.rows[0]
 
-    if (!user.avatar) return user
+    if (!user || !user.avatar) return user
 
     user.avatar_url = User.getAvatarUrl(user.avatar)
 
