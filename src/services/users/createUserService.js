@@ -1,15 +1,18 @@
 const bcrypt = require('bcrypt')
-const { client } = require('../../database/connection')
-const UserExistsError = require('../../errors/usersErrors/userExists')
-const { validateAllUserData } = require('../../validators/validation')
+
 const User = require('../../models/user')
+const UserRepository = require('../../repositories/users/userRepository')
+const { validateAllUserData } = require('../../validators/validation')
+
+const UserExistsError = require('../../errors/usersErrors/userExists')
 
 module.exports = {
   async createUser(user) {
+    const userRepository = new UserRepository()
+
     validateAllUserData(user.name, user.email, user.password)
     
-    const { rows } = await client.query('SELECT email FROM users WHERE email = $1', [ user.email ])
-    const userExists = rows[0];
+    const userExists = await userRepository.findByEmail(user.email)
     
     if (userExists) {
       throw new UserExistsError()
@@ -18,11 +21,10 @@ module.exports = {
     const encryptedPassword = await bcrypt.hash(user.password, 8);
 
     const userCreated = new User(user.name, user.email, encryptedPassword)
-      
-    await client.query(`
-    INSERT INTO users (id, name, email, password) VALUES ($1, $2, $3, $4)`,
-    [userCreated.id, userCreated.name, userCreated.email, encryptedPassword])
+    userCreated.id = user.id
 
-    return userCreated
+    const result = await userRepository.create(userCreated)
+
+    return result
   }
 }

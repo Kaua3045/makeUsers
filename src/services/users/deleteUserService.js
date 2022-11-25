@@ -1,15 +1,19 @@
-const { client } = require('../../database/connection')
+const UserRepository = require('../../repositories/users/userRepository')
+const { deleteFile } = require('../../database/diskStorage')
+const { avatarsFolder } = require('../../config/uploadConfig')
+
 const UserNotExistsError = require('../../errors/usersErrors/userNotExists')
 
 module.exports = {
   async deleteUser(id) {
-    const { rows } = await client.query('SELECT id FROM users WHERE id = $1', [ id ])
-    const usersExists = rows[0];
+    const userRepository = new UserRepository()
+    const userExists = await userRepository.findById(id)
 
-    if (!usersExists) {
+    if (!userExists) {
       throw new UserNotExistsError()
     }
 
-    await client.query('DELETE FROM users WHERE id = $1', [id])
+    await deleteFile(userExists.avatar, avatarsFolder)
+    await userRepository.remove(id)
   }
 }

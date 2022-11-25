@@ -1,19 +1,11 @@
-const { client } = require('../../database/connection')
-const User = require('../../models/user')
+const UserRepository = require('../../repositories/users/userRepository')
 
 module.exports = {
   async getAllUsers() {
-    const { rows } = await client.query('SELECT id, name, email, password, avatar FROM users');
-    const users = rows
+    const userRepository = new UserRepository()
 
-    const usersUpdateds = users.map(users => {
-      const user = new User(users.name, users.email, users.password)
-      user.id = users.id
-      user.avatar = user.getAvatarUrl(users.avatar)
+    const users = await userRepository.findAllUsers()
 
-      return user
-    })
-
-    return usersUpdateds
+    return users
   }
 }

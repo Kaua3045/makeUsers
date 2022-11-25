@@ -18,7 +18,7 @@ class User {
     this.password = password
   }
 
-  getAvatarUrl(avatarName) {
+  static getAvatarUrl(avatarName) {
     return `${process.env.APP_API_URL}/files/${avatarName}`
   }
 }

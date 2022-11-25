@@ -1,12 +1,16 @@
-const { client } = require('../../database/connection')
-const UserNotExistsError = require('../../errors/usersErrors/userNotExists')
+const UserRepository = require('../../repositories/users/userRepository')
 const { deleteFile, saveFile } = require('../../database/diskStorage')
 const { avatarsFolder } = require('../../config/uploadConfig')
 
+const User = require('../../models/user')
+
+const UserNotExistsError = require('../../errors/usersErrors/userNotExists')
+
 module.exports = {
   async updateUserAvatar(id, avaterFilename) {
-    const { rows } = await client.query('SELECT id, avatar FROM users WHERE id = $1', [id])
-    const userExists = rows[0]
+    const userRepository = new UserRepository()
+
+    const userExists = await userRepository.findById(id)
 
     if (!userExists) {
       throw new UserNotExistsError()
@@ -19,9 +23,9 @@ module.exports = {
     const avatarFile = await saveFile(avaterFilename, avatarsFolder)
 
     userExists.avatar = avatarFile
-    avatar = `${process.env.APP_API_URL}/files/${avatarFile}`
+    avatar = User.getAvatarUrl(avatarFile)
     
-    await client.query('UPDATE users SET avatar = $1 WHERE id = $2', [userExists.avatar, id])
+    await userRepository.update('avatar = $1', 'id = $2', [userExists.avatar, id])
     
     return avatar
   }

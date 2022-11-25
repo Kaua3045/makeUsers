@@ -1,17 +1,19 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { client } = require("../../database/connection")
 const UserNotExistsError = require('../../errors/usersErrors/userNotExists')
-const User = require('../../models/user')
-const { getUserByEmail } = require('../users/getUserByEmailService')
+const UserRepository = require('../../repositories/users/userRepository')
 
 module.exports = {
   async auth(email, password) {
-    const userFind = await getUserByEmail(email)
+    const userRepository = new UserRepository()
+
+    const userFind = await userRepository.findByEmail(email)
+
+    if (!userFind) throw new UserNotExistsError()
 
     const passwordIsValid = await bcrypt.compare(password, userFind.password)
 
-    if (!passwordIsValid || !userFind) {
+    if (!passwordIsValid) {
       throw new UserNotExistsError()
     }
 

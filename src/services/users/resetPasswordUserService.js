@@ -1,12 +1,12 @@
 const bcrypt = require('bcrypt')
-const { client } = require('../../database/connection')
+const UserRepository = require('../../repositories/users/userRepository')
 const UserNotExistsError = require('../../errors/usersErrors/userNotExists')
 const { passwordValid } = require('../../validators/userValidators')
 
 module.exports = {
   async resetPasswordUser(id, newPassword) {
-    const { rows } = await client.query('SELECT password FROM users where id = $1', [ id ])
-    const userExists = rows[0];
+    const userRepository = new UserRepository()
+    const userExists = await userRepository.findById(id)
 
     if (!userExists) {
       throw new UserNotExistsError()
@@ -15,6 +15,6 @@ module.exports = {
     passwordValid(newPassword)
 
     const updatedPassword = await bcrypt.hash(newPassword, 8)
-    await client.query('UPDATE users SET password = $1 WHERE id = $2', [updatedPassword, id])
+    await userRepository.update('password = $1', 'id = $2', [updatedPassword, id])
   }
 }
