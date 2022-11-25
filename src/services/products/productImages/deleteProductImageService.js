@@ -1,4 +1,5 @@
-const { client } = require('../../../database/connection')
+const ProductImageRepository = require("../../../repositories/products/productImageRepository")
+
 const { deleteFile } = require("../../../database/diskStorage")
 const { product_prefix } = require('../../../config/redisPrefixes')
 const { invalidatePrefix } = require('../../../database/redis')
@@ -7,8 +8,9 @@ const { imagesProductsFolder } = require('../../../config/uploadConfig')
 
 module.exports = {
   async deleteAllProductImage(product_id) {
-    const productImagesDatabase = await client.query('SELECT * FROM products_images WHERE product_id = $1', [product_id])
-    const productImagesExists = productImagesDatabase.rows
+    const productImageRepository = new ProductImageRepository()
+
+    const productImagesExists = await productImageRepository.findAllImageWithProductId(product_id)
 
     const ImagesName = productImagesExists.map(image => {
       return image.name
@@ -22,14 +24,15 @@ module.exports = {
   },
 
   async deleteProductImage(id) {
-    const productImagesDatabase = await client.query('SELECT * FROM products_images WHERE id = $1', [id])
-    const productImagesExists = productImagesDatabase.rows[0]
+    const productImageRepository = new ProductImageRepository()
+
+    const productImagesExists = await productImageRepository.findById(id)
 
     if (!productImagesExists) {
       throw new ImageNotExistsError()
     }
 
-    await client.query('DELETE FROM products_images WHERE id = $1', [productImagesExists.id])
+    await productImageRepository.remove(productImagesExists.id)
     await deleteFile(productImagesExists.name, imagesProductsFolder)
     await invalidatePrefix(product_prefix)
   }

@@ -1,13 +1,13 @@
-const { client } = require('../../database/connection')
 const { product_prefix } = require('../../config/redisPrefixes')
 const { invalidatePrefix } = require('../../database/redis')
 const Product = require('../../models/product')
 const ProductExistsError = require('../../errors/productsErrors/productExists')
+const ProductRepository = require('../../repositories/products/productRepository')
 
 module.exports = {
   async createProduct(productData) {
-    const { rows } = await client.query('SELECT name FROM products WHERE name = $1', [productData.name])
-    const productExists = rows[0]
+    const productRepository = new ProductRepository()
+    const productExists = await productRepository.findByName(productData.name)
 
     if (productExists) {
       throw new ProductExistsError()
@@ -21,19 +21,10 @@ module.exports = {
     )
     productCreated.id = productData.id
 
-    await client.query(`
-    INSERT INTO products (id, name, description, price, amount) VALUES ($1, $2, $3, $4, $5)`, 
-    [
-      productCreated.id,
-      productCreated.name,
-      productCreated.description,
-      productCreated.price,
-      productCreated.amount
-    ]
-    )
+    const result = await productRepository.create(productCreated)
 
     await invalidatePrefix(product_prefix)
     
-    return productCreated
+    return result
   }
 }

@@ -1,14 +1,20 @@
-const { client } = require('../../../database/connection')
+const ProductRepository = require('../../../repositories/products/productRepository')
+const ProductImageRepository = require('../../../repositories/products/productImageRepository')
+
 const { saveFile } = require('../../../database/diskStorage')
-const { product_prefix } = require('../../../config/redisPrefixes')
 const { invalidatePrefix } = require('../../../database/redis')
-const ProductImage = require("../../../models/productImage")
+
+const { product_prefix } = require('../../../config/redisPrefixes')
 const { imagesProductsFolder } = require('../../../config/uploadConfig')
+
+const ProductImage = require("../../../models/productImage")
 
 module.exports = {
   async createProductImages(productImages, id) {
-    const { rows } = await client.query('SELECT id FROM products WHERE id = $1', [id])
-    const productExists = rows[0]
+    const productRepository = new ProductRepository()
+    const productImageRepository = new ProductImageRepository()
+
+    const productExists = await productRepository.findById(id)
 
     if (productExists) { 
       const imagesMap = productImages.name.map(images => {
@@ -19,13 +25,7 @@ module.exports = {
         const imageFile = await saveFile(imagesMap[i], imagesProductsFolder)
         const productImagesCreated = new ProductImage(imageFile, id)
 
-        await client.query(`
-        INSERT INTO products_images (id, name, product_id) VALUES ($1, $2, $3)`,
-        [
-          productImagesCreated.id,
-          productImagesCreated.name,
-          productImagesCreated.product_id
-        ])
+        await productImageRepository.create(productImagesCreated)
       }
 
       await invalidatePrefix(product_prefix)

@@ -15,7 +15,7 @@ class ProductImage {
     this.product_id = product_id
   }
 
-  getProductImageUrl(name) {
+  static getProductImageUrl(name) {
     return `${process.env.APP_API_URL}/files/${name}`
   }
 }
