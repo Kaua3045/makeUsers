@@ -1,14 +1,16 @@
-const { client } = require('../../database/connection')
-const { getUserById } = require('../users/getUserByIdService')
+const AdminRepository = require('../../repositories/admins/adminRepository')
+const { getUserById } = require('../users')
+
 const UserNotExistsError = require('../../errors/usersErrors/userNotExists')
 const NotUpdateYouAdminError = require('../../errors/adminErrors/notUpdateYouAdmin')
 
 module.exports = {
   async updateAdmin(adminLogged, email, admin) {
-    const { rows } = await client.query('SELECT email, admin FROM users WHERE email = $1', [ email ])
-    const userExists = rows[0]
+    const adminRepository = new AdminRepository()
 
-    if (!userExists) {
+    const adminExists = await adminRepository.findAdminByEmail(email)
+
+    if (!adminExists) {
       throw new UserNotExistsError()
     }
 
@@ -18,6 +20,6 @@ module.exports = {
       throw new NotUpdateYouAdminError()
     }
 
-    await client.query('UPDATE users SET admin = $1 WHERE email = $2', [admin, email])
+    await adminRepository.updateAdmin(email, admin)
   }
 }
